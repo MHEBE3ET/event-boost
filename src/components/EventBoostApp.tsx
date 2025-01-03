@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, Suspense } from 'react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   Card,
   CardHeader,
@@ -78,6 +79,15 @@ const CommunicationPreference: React.FC<CommunicationPreferenceProps> = ({ color
   </li>
 );
 
+const engagementData = [
+  { date: 'Jan 1', registrations: 45, interactions: 32 },
+  { date: 'Jan 7', registrations: 52, interactions: 45 },
+  { date: 'Jan 14', registrations: 78, interactions: 62 },
+  { date: 'Jan 21', registrations: 95, interactions: 78 },
+  { date: 'Jan 28', registrations: 112, interactions: 95 },
+  { date: 'Feb 4', registrations: 125, interactions: 108 },
+  { date: 'Feb 11', registrations: 152, interactions: 125 }
+];
 // Tab Content Components
 const AudienceContent: React.FC = () => (
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -113,7 +123,16 @@ const AudienceContent: React.FC = () => (
 
           <div className="border rounded-lg p-4">
             <h3 className="font-bold mb-4">Engagement Timeline</h3>
-            <div className="h-48 w-full bg-gray-50"></div>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={engagementData}>
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="registrations" stroke="#3B82F6" strokeWidth={2} />
+                <Line type="monotone" dataKey="interactions" stroke="#10B981" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
