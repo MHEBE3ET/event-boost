@@ -105,10 +105,10 @@ const TabsTrigger: React.FC<TabsTriggerProps> = ({ value, children, className = 
 
   return (
     <button
-      className={`px-4 py-2 text-sm font-medium rounded-t-lg 
+      className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors
         ${isActive
-          ? 'bg-white dark:bg-gray-800 border-b-2 border-blue-600 text-blue-600 dark:text-blue-400'
-          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}
+          ? 'bg-blue-600 text-white'
+          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}
         ${className}`}
       onClick={() => handleTabChange(value)}
     >

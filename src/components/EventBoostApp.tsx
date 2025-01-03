@@ -279,30 +279,30 @@ const EventBoostApp = () => {
       </header>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6 mb-8">
-          <TabsTrigger value="dashboard" className="flex items-center gap-2">
+        <TabsList className="flex flex-wrap gap-2 overflow-x-auto md:grid md:grid-cols-6 mb-8">
+          <TabsTrigger value="dashboard" className="flex items-center gap-2 w-full sm:w-auto">
             <TrendingUp className="w-4 h-4" />
-            Dashboard
+            <span className="whitespace-nowrap">Dashboard</span>
           </TabsTrigger>
-          <TabsTrigger value="audience" className="flex items-center gap-2">
+          <TabsTrigger value="audience" className="flex items-center gap-2 w-full sm:w-auto">
             <Users className="w-4 h-4" />
-            Audience
+            <span className="whitespace-nowrap">Audience</span>
           </TabsTrigger>
-          <TabsTrigger value="targeting" className="flex items-center gap-2">
+          <TabsTrigger value="targeting" className="flex items-center gap-2 w-full sm:w-auto">
             <Target className="w-4 h-4" />
-            Targeting
+            <span className="whitespace-nowrap">Targeting</span>
           </TabsTrigger>
-          <TabsTrigger value="schedule" className="flex items-center gap-2">
+          <TabsTrigger value="schedule" className="flex items-center gap-2 w-full sm:w-auto">
             <Calendar className="w-4 h-4" />
-            Schedule
+            <span className="whitespace-nowrap">Schedule</span>
           </TabsTrigger>
-          <TabsTrigger value="gamification" className="flex items-center gap-2">
+          <TabsTrigger value="gamification" className="flex items-center gap-2 w-full sm:w-auto">
             <Trophy className="w-4 h-4" />
-            Gamify
+            <span className="whitespace-nowrap">Gamify</span>
           </TabsTrigger>
-          <TabsTrigger value="dynamic" className="flex items-center gap-2">
+          <TabsTrigger value="dynamic" className="flex items-center gap-2 w-full sm:w-auto">
             <Star className="w-4 h-4" />
-            Dynamic
+            <span className="whitespace-nowrap">Dynamic</span>
           </TabsTrigger>
         </TabsList>
 
