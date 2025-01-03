@@ -24,10 +24,6 @@ import {
   Calendar,
   TrendingUp,
   Trophy,
-  Gift,
-  Timer,
-  Award,
-  Sparkles,
   Star
 } from 'lucide-react';
 

@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+
+import { ReactNode, ReactElement } from 'react';
 
 export interface CardProps {
   children: ReactNode;
@@ -64,7 +65,7 @@ export interface AdjustmentItemProps {
 // Error Boundary Types
 export interface ErrorBoundaryProps {
   children: ReactNode;
-  FallbackComponent: (props: { error: Error }) => JSX.Element;
+  FallbackComponent: (props: { error: Error }) => ReactElement;
 }
 
 export interface ErrorBoundaryState {

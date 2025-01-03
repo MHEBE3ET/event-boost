@@ -1,8 +1,6 @@
 // Core Components
 "use client";
 
-import React, { useState } from 'react';
-
 export {
   Card,
   CardHeader,
@@ -17,13 +15,9 @@ export {
   ErrorFallback
 } from './core';
 
-// Main App
 export { default as EventBoostApp } from './EventBoostApp';
-
-// Dashboard
 export { default as Dashboard } from './Dashboard';
 
-// Targeting and Schedule
 export {
   TargetingContent,
   ScheduleContent,
@@ -33,7 +27,6 @@ export {
   ViewToggle
 } from './TargetingSchedule';
 
-// Gamification and Dynamic
 export {
   GamificationContent,
   DynamicContent,
