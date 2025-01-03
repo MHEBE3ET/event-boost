@@ -43,7 +43,7 @@ interface TabsContextType {
 
 // Card Components
 const Card: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`bg-white rounded-lg border shadow-sm ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm ${className}`}>
     {children}
   </div>
 );
@@ -106,7 +106,9 @@ const TabsTrigger: React.FC<TabsTriggerProps> = ({ value, children, className = 
   return (
     <button
       className={`px-4 py-2 text-sm font-medium rounded-t-lg 
-        ${isActive ? 'bg-white border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}
+        ${isActive
+          ? 'bg-white dark:bg-gray-800 border-b-2 border-blue-600 text-blue-600 dark:text-blue-400'
+          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}
         ${className}`}
       onClick={() => handleTabChange(value)}
     >

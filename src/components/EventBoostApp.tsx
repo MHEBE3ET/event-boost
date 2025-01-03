@@ -38,10 +38,10 @@ interface MetricCardProps {
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, value, trend, bgColor, textColor }) => (
-  <div className={`p-4 ${bgColor} rounded-lg`}>
-    <h3 className="text-sm font-medium text-gray-600">{title}</h3>
-    <p className={`text-2xl font-bold ${textColor}`}>{value}</p>
-    <span className="text-sm text-blue-600">{trend}</span>
+  <div className={`p-4 ${bgColor} dark:bg-gray-800 rounded-lg`}>
+    <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">{title}</h3>
+    <p className={`text-2xl font-bold ${textColor} dark:text-white`}>{value}</p>
+    <span className="text-sm text-blue-600 dark:text-blue-400">{trend}</span>
   </div>
 );
 
@@ -206,21 +206,21 @@ const AudienceContent: React.FC = () => (
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="bg-gray-50">
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Company</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Role</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Interest Level</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Last Interaction</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Status</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Action</th>
+              <tr className="bg-gray-50 dark:bg-gray-900">
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Name</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Company</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Role</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Interest Level</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Last Interaction</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Status</th>
+                <th scope="col" className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               <tr>
-                <td className="px-4 py-3">Sarah Chen</td>
-                <td className="px-4 py-3">Microsoft</td>
-                <td className="px-4 py-3">Tech Lead</td>
+                <td className="px-4 py-3 dark:text-gray-300">Sarah Chen</td>
+                <td className="px-4 py-3 dark:text-gray-300">Microsoft</td>
+                <td className="px-4 py-3 dark:text-gray-300">Tech Lead</td>
                 <td className="px-4 py-3">
                   <div className="flex">
                     <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
@@ -228,30 +228,30 @@ const AudienceContent: React.FC = () => (
                     <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
                   </div>
                 </td>
-                <td className="px-4 py-3">2 days ago</td>
+                <td className="px-4 py-3 dark:text-gray-300">2 days ago</td>
                 <td className="px-4 py-3">
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">Registered</span>
+                  <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded text-xs">Registered</span>
                 </td>
                 <td className="px-4 py-3">
-                  <button className="text-blue-600 text-sm">Follow up</button>
+                  <button className="text-blue-600 dark:text-blue-400 text-sm">Follow up</button>
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3">John Smith</td>
-                <td className="px-4 py-3">Google</td>
-                <td className="px-4 py-3">Engineering Manager</td>
+                <td className="px-4 py-3 dark:text-gray-300">John Smith</td>
+                <td className="px-4 py-3 dark:text-gray-300">Google</td>
+                <td className="px-4 py-3 dark:text-gray-300">Engineering Manager</td>
                 <td className="px-4 py-3">
                   <div className="flex">
                     <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
                     <Star className="w-4 h-4 text-yellow-400" fill="currentColor" />
                   </div>
                 </td>
-                <td className="px-4 py-3">5 days ago</td>
+                <td className="px-4 py-3 dark:text-gray-300">5 days ago</td>
                 <td className="px-4 py-3">
-                  <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">Interested</span>
+                  <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 rounded text-xs">Interested</span>
                 </td>
                 <td className="px-4 py-3">
-                  <button className="text-blue-600 text-sm">Send reminder</button>
+                  <button className="text-blue-600 dark:text-blue-400 text-sm">Send reminder</button>
                 </td>
               </tr>
             </tbody>
@@ -259,7 +259,7 @@ const AudienceContent: React.FC = () => (
         </div>
       </CardContent>
     </Card>
-  </div>
+  </div >
 );
 
 const EventBoostApp = () => {
@@ -269,12 +269,12 @@ const EventBoostApp = () => {
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
       <header className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">EventBoost</h1>
-          <p className="text-gray-500">Smart Event Marketing Platform</p>
+          <h1 className="text-3xl font-bold dark:text-white">EventBoost</h1>
+          <p className="text-gray-500 dark:text-gray-400">Smart Event Marketing Platform</p>
         </div>
         <div className="flex items-center space-x-4">
           <Bell className="w-6 h-6 text-gray-400" />
-          <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700"></div>
         </div>
       </header>
 
