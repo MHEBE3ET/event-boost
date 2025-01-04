@@ -1,7 +1,11 @@
 "use client";
 
-import React from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './core';
+import CampaignForm from './CampaignForm';
+//import { toast } from '@/components/ui/use-toast';
 
 interface AudienceSegmentProps {
   title: string;
@@ -21,6 +25,139 @@ interface ProgressBarProps {
   label: string;
   value: number;
 }
+
+const TargetingContent = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+
+  // Function to fetch campaigns
+  const fetchCampaigns = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/campaigns');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Campaigns data:', data);
+        setCampaigns(data);
+      }
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+    }
+  };
+
+  // Fetch campaigns when component mounts
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  // Handle campaign creation
+  const handleCreateCampaign = async (campaignData: any) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/campaigns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(campaignData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Created campaign:', data);
+        setIsFormOpen(false);
+        fetchCampaigns(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Smart Audience Segments</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <AudienceSegment
+              title="Past Event Attendees"
+              contacts="1,245"
+              bgColor="bg-blue-50"
+              tags={['Tech Leaders', 'High Engagement', 'Previous Attendees']}
+              buttonColor="bg-blue-600"
+            />
+
+            <AudienceSegment
+              title="LinkedIn Tech Groups"
+              contacts="3,890"
+              bgColor="bg-purple-50"
+              tags={['Software Engineers', 'Active Discussion', 'Tech Community']}
+              buttonColor="bg-purple-600"
+            />
+
+            <AudienceSegment
+              title="Similar Event Attendees"
+              contacts="2,567"
+              bgColor="bg-green-50"
+              tags={['Event Goers', 'Tech Interest', 'Industry Match']}
+              buttonColor="bg-green-600"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Campaign Management</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <h3 className="font-bold mb-3">Active Campaigns</h3>
+              <div className="space-y-3">
+                {campaigns.length > 0 ? (
+                  campaigns.map((campaign) => (
+                    <CampaignItem
+                      key={campaign.id}
+                      status={campaign.status === 'active' ? 'green' :
+                        campaign.status === 'paused' ? 'yellow' : 'purple'}
+                      name={campaign.name}
+                      stats={`${campaign.clicks || 0} clicks • ${campaign.conversionRate || 0}% conversion`}
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No campaigns yet</p>
+                )}
+              </div>
+            </div>
+
+            <div className="p-4 border rounded-lg">
+              <h3 className="font-bold mb-3">Campaign Performance</h3>
+              <div className="space-y-3">
+                <ProgressBar label="Email Open Rate" value={42} />
+                <ProgressBar label="Click-through Rate" value={28} />
+                <ProgressBar label="Registration Rate" value={12} />
+              </div>
+            </div>
+
+            <button
+              className="w-full py-2 bg-blue-600 text-white rounded-lg"
+              onClick={() => setIsFormOpen(true)}
+            >
+              Create New Campaign
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <CampaignForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleCreateCampaign}
+      />
+    </div>
+  );
+};
 
 const AudienceSegment: React.FC<AudienceSegmentProps> = ({ title, contacts, bgColor, tags, buttonColor }) => (
   <div className={`p-4 border rounded-lg ${bgColor}`}>
@@ -79,85 +216,7 @@ const ViewToggle: React.FC = () => (
   </div>
 );
 
-const TargetingContent = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <Card>
-      <CardHeader>
-        <CardTitle>Smart Audience Segments</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <AudienceSegment
-            title="Past Event Attendees"
-            contacts="1,245"
-            bgColor="bg-blue-50"
-            tags={['Tech Leaders', 'High Engagement', 'Previous Attendees']}
-            buttonColor="bg-blue-600"
-          />
 
-          <AudienceSegment
-            title="LinkedIn Tech Groups"
-            contacts="3,890"
-            bgColor="bg-purple-50"
-            tags={['Software Engineers', 'Active Discussion', 'Tech Community']}
-            buttonColor="bg-purple-600"
-          />
-
-          <AudienceSegment
-            title="Similar Event Attendees"
-            contacts="2,567"
-            bgColor="bg-green-50"
-            tags={['Event Goers', 'Tech Interest', 'Industry Match']}
-            buttonColor="bg-green-600"
-          />
-        </div>
-      </CardContent>
-    </Card>
-
-    <Card>
-      <CardHeader>
-        <CardTitle>Campaign Management</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-bold mb-3">Active Campaigns</h3>
-            <div className="space-y-3">
-              <CampaignItem
-                status="green"
-                name="Early Bird Campaign"
-                stats="245 clicks • 12% conversion"
-              />
-              <CampaignItem
-                status="yellow"
-                name="LinkedIn Tech Group"
-                stats="189 clicks • 8% conversion"
-              />
-              <CampaignItem
-                status="purple"
-                name="Past Attendee Referral"
-                stats="312 clicks • 15% conversion"
-              />
-            </div>
-          </div>
-
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-bold mb-3">Campaign Performance</h3>
-            <div className="space-y-3">
-              <ProgressBar label="Email Open Rate" value={42} />
-              <ProgressBar label="Click-through Rate" value={28} />
-              <ProgressBar label="Registration Rate" value={12} />
-            </div>
-          </div>
-
-          <button className="w-full py-2 bg-blue-600 text-white rounded-lg">
-            Create New Campaign
-          </button>
-        </div>
-      </CardContent>
-    </Card>
-  </div>
-);
 
 const ScheduleContent: React.FC = () => (
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -360,5 +419,5 @@ export {
   AudienceSegment,
   CampaignItem,
   ProgressBar,
-  ViewToggle
+  ViewToggle,
 };
