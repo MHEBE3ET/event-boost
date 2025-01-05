@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './core';
 import CampaignForm from './CampaignForm';
 import { fetchAudienceSegments } from '../services/mockData';
-//import { toast } from '@/components/ui/use-toast';
+import { Star } from 'lucide-react';
 
 interface AudienceSegmentProps {
   title: string;
@@ -32,19 +32,17 @@ const TargetingContent = () => {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [audienceSegments, setAudienceSegments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'segments' | 'leads' | 'campaigns'>('segments');
 
-  // Fetch both campaigns and audience data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch campaigns
         const campaignsResponse = await fetch('http://localhost:3001/api/campaigns');
         if (campaignsResponse.ok) {
           const campaignsData = await campaignsResponse.json();
           setCampaigns(campaignsData);
         }
 
-        // Fetch audience segments (mock)
         const segmentsData = await fetchAudienceSegments();
         setAudienceSegments(segmentsData as any[]);
       } catch (error) {
@@ -77,77 +75,167 @@ const TargetingContent = () => {
     }
   };
 
+  const renderSegmentsTab = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle>Smart Audience Segments</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {audienceSegments.map((segment) => (
+            <AudienceSegment
+              key={segment.id}
+              title={segment.title}
+              contacts={segment.contacts.toLocaleString()}
+              bgColor={segment.bgColor}
+              tags={segment.tags}
+              buttonColor={segment.buttonColor}
+            />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const renderLeadsTab = () => (
+    <Card>
+      <CardContent>
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex gap-2">
+            <button className="flex items-center gap-2 px-3 py-2 border rounded hover:bg-gray-50">
+              <span>⌦</span> Filter
+            </button>
+            <select className="px-3 py-2 border rounded">
+              <option>All Leads</option>
+              <option>Hot Leads</option>
+              <option>New Leads</option>
+            </select>
+          </div>
+          <div className="flex gap-2">
+            <button className="px-4 py-2 border rounded hover:bg-gray-50">Export</button>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded">Add Lead</button>
+          </div>
+        </div>
+
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-2">Name</th>
+              <th className="text-left py-2">Company</th>
+              <th className="text-left py-2">Role</th>
+              <th className="text-left py-2">Lead Score</th>
+              <th className="text-left py-2">Last Activity</th>
+              <th className="text-left py-2">Stage</th>
+              <th className="text-left py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b">
+              <td className="py-3">Sarah Chen</td>
+              <td>Microsoft</td>
+              <td>Tech Lead</td>
+              <td>
+                <div className="flex text-yellow-400">
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
+                  <Star size={16} fill="currentColor" />
+                </div>
+              </td>
+              <td>Registered (2 days ago)</td>
+              <td>
+                <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
+                  Qualified
+                </span>
+              </td>
+              <td>
+                <button className="text-blue-600 hover:underline">Contact</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </CardContent>
+    </Card>
+  );
+
+  const renderCampaignsTab = () => (
+    <Card>
+      <CardHeader>
+        <CardTitle>Campaign Management</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="p-4 border rounded-lg">
+            <h3 className="font-bold mb-3">Active Campaigns</h3>
+            <div className="space-y-3">
+              {campaigns.map((campaign) => (
+                <CampaignItem
+                  key={campaign.id}
+                  status={campaign.status === 'active' ? 'green' :
+                    campaign.status === 'paused' ? 'yellow' : 'purple'}
+                  name={campaign.name}
+                  stats={`${campaign.clicks || 0} clicks • ${campaign.conversionRate || 0}% conversion`}
+                />
+              ))}
+              {campaigns.length === 0 && (
+                <p className="text-gray-500 text-sm">No campaigns yet</p>
+              )}
+            </div>
+          </div>
+
+          <div className="p-4 border rounded-lg">
+            <h3 className="font-bold mb-3">Campaign Performance</h3>
+            <div className="space-y-3">
+              <ProgressBar label="Email Open Rate" value={42} />
+              <ProgressBar label="Click-through Rate" value={28} />
+              <ProgressBar label="Registration Rate" value={12} />
+            </div>
+          </div>
+
+          <button
+            className="w-full py-2 bg-blue-600 text-white rounded-lg"
+            onClick={() => setIsFormOpen(true)}
+          >
+            Create New Campaign
+          </button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading...</div>;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Smart Audience Segments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {audienceSegments.map((segment) => (
-              <AudienceSegment
-                key={segment.id}
-                title={segment.title}
-                contacts={segment.contacts.toLocaleString()}
-                bgColor={segment.bgColor}
-                tags={segment.tags}
-                buttonColor={segment.buttonColor}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Rest of your component remains the same */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Campaign Management</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-bold mb-3">Active Campaigns</h3>
-              <div className="space-y-3">
-                {campaigns.length > 0 ? (
-                  campaigns.map((campaign) => (
-                    <CampaignItem
-                      key={campaign.id}
-                      status={campaign.status === 'active' ? 'green' :
-                        campaign.status === 'paused' ? 'yellow' : 'purple'}
-                      name={campaign.name}
-                      stats={`${campaign.clicks || 0} clicks • ${campaign.conversionRate || 0}% conversion`}
-                    />
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-sm">No campaigns yet</p>
-                )}
-              </div>
-            </div>
-
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-bold mb-3">Campaign Performance</h3>
-              <div className="space-y-3">
-                <ProgressBar label="Email Open Rate" value={42} />
-                <ProgressBar label="Click-through Rate" value={28} />
-                <ProgressBar label="Registration Rate" value={12} />
-              </div>
-            </div>
-
+    <div className="space-y-6">
+      {/* Subtabs Navigation */}
+      <div className="border-b">
+        <div className="flex gap-6">
+          {[
+            { id: 'segments', label: 'Audience Segments' },
+            { id: 'leads', label: 'Lead Management' },
+            { id: 'campaigns', label: 'Campaigns' }
+          ].map((tab) => (
             <button
-              className="w-full py-2 bg-blue-600 text-white rounded-lg"
-              onClick={() => setIsFormOpen(true)}
+              key={tab.id}
+              className={`pb-2 px-1 ${activeTab === tab.id
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600'
+                }`}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
             >
-              Create New Campaign
+              {tab.label}
             </button>
-          </div>
-        </CardContent>
-      </Card>
+          ))}
+        </div>
+      </div>
 
+      {/* Content based on active tab */}
+      {activeTab === 'segments' && renderSegmentsTab()}
+      {activeTab === 'leads' && renderLeadsTab()}
+      {activeTab === 'campaigns' && renderCampaignsTab()}
+
+      {/* Campaign Form Modal */}
       <CampaignForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -410,6 +498,7 @@ const ScheduleContent: React.FC = () => (
     </Card>
   </div>
 );
+
 
 export {
   TargetingContent,
