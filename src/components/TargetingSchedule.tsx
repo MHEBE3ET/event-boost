@@ -5,6 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './core';
 import CampaignForm from './CampaignForm';
+import { fetchAudienceSegments } from '../services/mockData';
 //import { toast } from '@/components/ui/use-toast';
 
 interface AudienceSegmentProps {
@@ -29,27 +30,33 @@ interface ProgressBarProps {
 const TargetingContent = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [audienceSegments, setAudienceSegments] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Function to fetch campaigns
-  const fetchCampaigns = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/api/campaigns');
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Campaigns data:', data);
-        setCampaigns(data);
-      }
-    } catch (error) {
-      console.error('Error fetching campaigns:', error);
-    }
-  };
-
-  // Fetch campaigns when component mounts
+  // Fetch both campaigns and audience data
   useEffect(() => {
-    fetchCampaigns();
+    const fetchData = async () => {
+      try {
+        // Fetch campaigns
+        const campaignsResponse = await fetch('http://localhost:3001/api/campaigns');
+        if (campaignsResponse.ok) {
+          const campaignsData = await campaignsResponse.json();
+          setCampaigns(campaignsData);
+        }
+
+        // Fetch audience segments (mock)
+        const segmentsData = await fetchAudienceSegments();
+        setAudienceSegments(segmentsData as any[]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Handle campaign creation
   const handleCreateCampaign = async (campaignData: any) => {
     try {
       const response = await fetch('http://localhost:3001/api/campaigns', {
@@ -62,14 +69,17 @@ const TargetingContent = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Created campaign:', data);
         setIsFormOpen(false);
-        fetchCampaigns(); // Refresh the list
+        setCampaigns(prev => [data, ...prev]);
       }
     } catch (error) {
       console.error('Error creating campaign:', error);
     }
   };
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64">Loading...</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,33 +89,21 @@ const TargetingContent = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <AudienceSegment
-              title="Past Event Attendees"
-              contacts="1,245"
-              bgColor="bg-blue-50"
-              tags={['Tech Leaders', 'High Engagement', 'Previous Attendees']}
-              buttonColor="bg-blue-600"
-            />
-
-            <AudienceSegment
-              title="LinkedIn Tech Groups"
-              contacts="3,890"
-              bgColor="bg-purple-50"
-              tags={['Software Engineers', 'Active Discussion', 'Tech Community']}
-              buttonColor="bg-purple-600"
-            />
-
-            <AudienceSegment
-              title="Similar Event Attendees"
-              contacts="2,567"
-              bgColor="bg-green-50"
-              tags={['Event Goers', 'Tech Interest', 'Industry Match']}
-              buttonColor="bg-green-600"
-            />
+            {audienceSegments.map((segment) => (
+              <AudienceSegment
+                key={segment.id}
+                title={segment.title}
+                contacts={segment.contacts.toLocaleString()}
+                bgColor={segment.bgColor}
+                tags={segment.tags}
+                buttonColor={segment.buttonColor}
+              />
+            ))}
           </div>
         </CardContent>
       </Card>
 
+      {/* Rest of your component remains the same */}
       <Card>
         <CardHeader>
           <CardTitle>Campaign Management</CardTitle>
